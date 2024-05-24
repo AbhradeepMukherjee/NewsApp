@@ -44,7 +44,7 @@ const InputNote = () => {
         setTitle("");
         setDetails("");
         inputRef.current.focus();
-      }} className="bg-green-950 mt-1 hover:bg-green-800 h-112">
+      }} className="bg-green-950 mt-1 hover:bg-green-800 h-112 text-white">
         Save
       </button>
     </div>

@@ -4,9 +4,14 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Bookmarks, Notes, Profile } from "./components/Sidebar";
 import Loginpage from "./components/Loginpage";
+import Signup from "./components/Signup";
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   useEffect(() => {
+    if(localStorage.getItem("userInfo")) {
+      setShowLogin(false);
+      return;
+    }
     setTimeout(() => {
       setShowLogin(!showLogin);
     }, [10000]);
@@ -15,7 +20,10 @@ function App() {
     <div className="relative">
       <Router>
         {showLogin ? (
-          <Loginpage setShowLogin={setShowLogin} showLogin={showLogin}/>
+          <Routes>
+            <Route exact path="/" element={<Loginpage setShowLogin={setShowLogin} />}/>
+            <Route exact path="/signup" element={<Signup setShowLogin={setShowLogin} />} />
+          </Routes>
         ) : (
           <Routes>
             <Route exact path="/bookmarks" element={<Bookmarks />} />
@@ -64,15 +72,9 @@ function App() {
                 <Body key="technology" pageSize={6} category="technology" />
               }
             />
-            <Route
-              exact
-              path="/crypto"
-              element={<Body key="crypto" pageSize={6} category="crypto" />}
-            />
           </Routes>
         )}
       </Router>
-      {/* <button className="static right-10 bottom-10 opacity-100 text-black bg-inherit rounded-full padding-2"><BiSolidPencil/></button> */}
     </div>
   );
 }

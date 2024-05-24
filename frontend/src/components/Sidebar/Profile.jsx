@@ -1,12 +1,21 @@
-import React from 'react';
-import Backbutton from '../../assets/icons/Backbutton';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import Backbutton from "../../assets/icons/Backbutton";
+import { Link } from "react-router-dom";
 const Profile = () => {
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userInfo");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+    }
+  }, []);
+
   return (
-    <div className='bg-slate-50 min-h-screen h-fit'>
-      <ul className='flex justify-between bg-slate-200 pt-4 pb-4 pl-8 pr-8 items-center'>
+    <div className="bg-slate-50 min-h-screen h-fit">
+      <ul className="flex justify-between bg-slate-200 pt-4 pb-4 pl-8 pr-8 items-center">
         <li>
-            <Backbutton/>
+          <Backbutton />
         </li>
         <li className="">
           <h1 className="text-black">Profile</h1>
@@ -34,16 +43,17 @@ const Profile = () => {
           </Link>
         </div>
       </ul>
-      <div className='text-black border border-black w-2/3 max-h-[300px] h-fit min-h-fit'>
-        Name:
-        Email:
-        Photo:
-        password:
-        edit password:
-        
+      <div className="text-black border border-black w-2/3 max-h-[300px] h-full min-h-fit px-6 mx-10 mt-10 py-10 rounded-md space-y-4">
+        <div className="flex w-full space-x-96">
+          <div>{`Firstname: ${user.firstname}`}</div>
+          <div>{`Lastname: ${user.lastname}`}</div>
+        </div>
+        <div>Password: ********</div>
+        <div>{`Country: ${user.country}`}</div>
+        <div>{`Interest: ${user.interest}`}</div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

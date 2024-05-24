@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { MdClose } from "react-icons/md";
-const Loginpage = ({showLogin, setShowLogin}) => {
+import { useSetRecoilState } from "recoil";
+import { tokenAtom } from "../store/atom/token";
+const Loginpage = ({setShowLogin}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [toast, setToast] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const setToken = useSetRecoilState(tokenAtom);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -14,17 +19,63 @@ const Loginpage = ({showLogin, setShowLogin}) => {
     backgroundSize: "cover",
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(!email || !password){
+      setToast("toast-danger");
+      setToastMessage("Please fill all the Fields");
+      setShowToast(true);
+      setTimeout(() => {
+          setShowToast(false);
+      }, 3000);
+      return;
+  }
+  try{
+      const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+      };
+      const { data } = await axios.post(
+          "http://localhost:8000/api/v1/user/signin",
+          {
+            email,
+            password
+          },
+          config
+      );
+      localStorage.setItem("userInfo", JSON.stringify(data.user));
+      setToken(data.token);
+      setShowLogin(false);
+      navigate('/');
+      setToast("toast-success");
+      setToastMessage("Signing up successfull, Welcome!");
+      setShowToast(true);
+      setTimeout(() => {
+          setShowToast(false);
+      }, 3000);
+  }catch(err){
+      setToast("toast-danger");
+      setToastMessage("Error Occured");
+      setShowToast(true);
+      setTimeout(() => {
+          setShowToast(false);
+      }, 3000);
+      return;
+  }
+  }
+
   return (
-    <div className=" bg-white h-full w-screen py-14 " style={myStyle}>
-      <div className="mx-auto h-[40rem] w-[30rem] bg-white bg-opacity-80 py-16 px-8 relative">
+    <div className=" bg-white h-screen w-screen py-14 " style={myStyle}>
+      <div className="mx-auto h-fit w-[30rem] bg-white bg-opacity-80 py-16 px-8 relative">
         <h1 className="text-black font-bold text-center mb-14">Sign in</h1>
         <form
-          action=""
+          onSubmit={handleSubmit}
           className="text-black flex flex-col items-start space-y-10 mb-24"
         >
           <div className="self-stretch">
             <label htmlFor="" className="self-start text-xl">
-              Email
+              Email:
             </label>
             <input
               type="text"
@@ -51,19 +102,20 @@ const Loginpage = ({showLogin, setShowLogin}) => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
-          <button className=" text-white self-stretch bg-sky-950">
+          <button type="submit" className=" text-white self-stretch bg-sky-950">
             Submit
           </button>
         </form>
         <div className="flex justify-between">
-          <Link to="/sign-up" className="text-sm hover:underline hover:underline-offset-2">
+          <Link to="/signup" className="text-sm hover:underline hover:underline-offset-2">
             Don't have an account? Sign up
           </Link>
-          <a onClick={()=>setShowLogin(!showLogin)}  to="/" className="text-sm hover:underline hover:underline-offset-2 cursor-pointer">
+          <a onClick={()=>setShowLogin(false)}  to="/" className="text-sm hover:underline hover:underline-offset-2 cursor-pointer">
             Skip for now
           </a>
         </div>
       </div>
+      {showToast?<Toast setShowToast={setShowToast} message={toastMessage} toast={toast} />:<div/>}
     </div>
   );
 };

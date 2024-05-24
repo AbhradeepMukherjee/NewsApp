@@ -65,8 +65,8 @@ const Body = ({ category, pageSize }) => {
           ))}
         </div>
         <div className="flex justify-between mt-5">
-          <button onClick={()=>handlePrevious()} disabled={page===1?true:false} className={`${page===1?"bg-gray-500":"bg-black"} w-[7rem]`}>Previous</button>
-          <button onClick={()=>handleNext()} disabled={length >= totalResults? true: false} className={`${length >= totalResults?"bg-gray-500":"bg-black"} w-[7rem]`}>Next</button>
+          <button onClick={()=>handlePrevious()} disabled={page===1?true:false} className={`${page===1?"bg-gray-500":"bg-black"} w-[7rem] text-white`}>Previous</button>
+          <button onClick={()=>handleNext()} disabled={length >= totalResults? true: false} className={`${length >= totalResults?"bg-gray-500":"bg-black"} w-[7rem] text-white`}>Next</button>
         </div>
       </div>
       }

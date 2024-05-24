@@ -26,9 +26,6 @@ const Navbar = () => {
           <li>
             <Link to="/technology" className={`text-black hover:text-gray-700 font-normal text-xl font-serif ${'active' ? 'text-black' : 'text-gray-700'}`}>Technology</Link>
           </li>
-          {/* <li>
-            <Link to="/crypto" className={`text-black hover:text-gray-700 font-normal font-serif ${'active' ? 'text-black' : 'text-gray-700'}`}>Crypto</Link>
-          </li> */}
         </ul>
         
         <div className="flex space-x-6">

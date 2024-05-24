@@ -9,7 +9,7 @@ const Sidebar = () => {
   return (
     <div className="flex ml-0">
       <div
-        className={`bg-slate-200 text-black h-96 w-[200px] ${
+        className={`bg-slate-200 text-black h-full w-[200px] ${
           isActive ? "active" : "hidden"
         }`}
       >
@@ -57,14 +57,6 @@ const Sidebar = () => {
             >
               Profile
             </Link>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="text-black hover:text-gray-700 font-normal font-serif"
-            >
-              Settings
-            </a>
           </li>
         </ul>
       </div>

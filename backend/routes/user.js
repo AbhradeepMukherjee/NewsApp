@@ -3,17 +3,17 @@ const { signupBody, signinBody, updateBody } = require("../validation/user");
 const User = require("../models/user.model.js");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const {JWT_SECRET} = require("../config.js");
+const { JWT_SECRET } = require("../config.js");
 const { authMiddleware } = require("../middleware.js");
-
 
 router.post("/signup", async (req, res) => {
   const postPayload = req.body;
   const { success } = signupBody.safeParse(postPayload);
   if (!success || !postPayload)
     return res.status(411).json({ message: "Invalid Input" });
-  const existingUser = await User.findOne({ email: req.body.email,
-    password: req.body.password
+  const existingUser = await User.findOne({
+    email: req.body.email,
+    password: req.body.password,
   });
   if (existingUser)
     return res.status(411).json({ message: "User already exists" });
@@ -33,7 +33,20 @@ router.post("/signup", async (req, res) => {
     },
     JWT_SECRET
   );
-  return res.status(200).json({ message: "User successfully created", token });
+  return res
+    .status(200)
+    .json({
+      message: "User successfully created",
+      user: {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        age: user.age,
+        country: user.country,
+        interest: user.interest,
+      },
+      token,
+    });
 });
 
 router.post("/signin", async (req, res) => {
@@ -54,17 +67,25 @@ router.post("/signin", async (req, res) => {
   );
 
   return res.status(200).json({
+    user: {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      age: user.age,
+      country: user.country,
+      interest: user.interest,
+    },
     token,
   });
 });
 
-router.put("/",authMiddleware, async (req, res) => {
-    const putPayload = req.body;
-    const { success } = updateBody.safeParse(putPayload);
-    if(!putPayload || !success)
-        return res.status(411).json({ message: "Invalid Inputs" });
-    await User.updateOne({_id: req.userId}, {$set: {...putPayload}});
-    return res.status(200).json({ message: "User updated successfully" });
+router.put("/", authMiddleware, async (req, res) => {
+  const putPayload = req.body;
+  const { success } = updateBody.safeParse(putPayload);
+  if (!putPayload || !success)
+    return res.status(411).json({ message: "Invalid Inputs" });
+  await User.updateOne({ _id: req.userId }, { $set: { ...putPayload } });
+  return res.status(200).json({ message: "User updated successfully" });
 });
 
 module.exports = router;
