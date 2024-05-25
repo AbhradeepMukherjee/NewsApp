@@ -18,7 +18,7 @@ const Dropdown = ({options, handleFunction}) => {
       <div>
         <button
           type="button"
-          className="inline-flex justify-center w-[130px] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+          className="inline-flex justify-center w-[150px] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
           id={`menu-button-${tag}`}
           aria-expanded="true"
           aria-haspopup="true"

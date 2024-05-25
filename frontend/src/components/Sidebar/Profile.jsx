@@ -1,8 +1,36 @@
 import React, { useEffect, useState } from "react";
 import Backbutton from "../../assets/icons/Backbutton";
-import { Link } from "react-router-dom";
+import { FaPen } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import Dropdown from "../Dropdown.jsx";
+import { useRecoilState } from "recoil";
+import { tokenAtom } from "../../store/atom/token.js";
 const Profile = () => {
+  const [token, setToken] = useRecoilState(tokenAtom);
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
+  const [showFirstnameInputline, setShowFirstnameInputline] = useState(false);
+  const [showLasttnameInputline, setShowLastnameInputline] = useState(false);
+  const [modifiedFirstname, setModifiedFirstname] = useState("");
+  const [modifiedLastname, setModifiedLastname] = useState("");
+  const [modifiedCountry, setModifiedCountry] = useState("");
+  const [modifiedInterest, setModifiedInterest] = useState("");
+  const interestOptions = [
+    { name: "general", symbol: "general" },
+    { name: "business", symbol: "business" },
+    { name: "entertainment", symbol: "entertainment" },
+    { name: "health", symbol: "health" },
+    { name: "science", symbol: "science" },
+    { name: "sports", symbol: "sports" },
+    { name: "technology", symbol: "technology" },
+  ];
+  const countryOptions = [
+    { name: "India", symbol: "in" },
+    { name: "Japan", symbol: "jp" },
+    { name: "USA", symbol: "us" },
+    { name: "Russia", symbol: "ru" },
+    { name: "Australia", symbol: "au" },
+  ];
   useEffect(() => {
     const storedUser = localStorage.getItem("userInfo");
     if (storedUser) {
@@ -11,6 +39,64 @@ const Profile = () => {
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo");
+    setToken("");
+    navigate("/");
+  };
+
+  const handleUpdate = async () => {
+    if (
+      modifiedCountry ||
+      modifiedFirstname ||
+      modifiedInterest ||
+      modifiedLastname
+    ) {
+      try {
+        const modifiedBody = {
+          firstname: modifiedFirstname, lastname: modifiedLastname, country: modifiedCountry, interest: modifiedInterest
+        };
+        let body = {};
+        Object.keys(modifiedBody).forEach(key => {
+          if (modifiedBody[key] !== "") {
+            body[key] = modifiedBody[key];
+          }
+        });
+        const config = {
+          headers: {
+            'Content-Type': 'application/json', 
+            "Authorization": `Bearer ${token}`,
+          },
+        };
+        const { data } = await axios.put(
+          "http://localhost:8000/api/v1/user/", body, config
+        );
+        setToast("toast-success");
+        setToastMessage("Updated successfully!");
+        setShowToast(true);
+        setTimeout(() => {
+            setShowToast(false);
+        }, 3000);
+        navigate('/');
+        return;
+      } catch (err) {
+        setToast("toast-danger");
+        setToastMessage("Error Occured");
+        setShowToast(true);
+        setTimeout(() => {
+            setShowToast(false);
+        }, 3000);
+        return;
+      }
+    }
+    setToast("toast-danger");
+    setToastMessage("No Changes to Update");
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+    return;
+  };
   return (
     <div className="bg-slate-50 min-h-screen h-fit">
       <ul className="flex justify-between bg-slate-200 pt-4 pb-4 pl-8 pr-8 items-center">
@@ -43,14 +129,90 @@ const Profile = () => {
           </Link>
         </div>
       </ul>
-      <div className="text-black border border-black w-2/3 max-h-[300px] h-full min-h-fit px-6 mx-10 mt-10 py-10 rounded-md space-y-4">
-        <div className="flex w-full space-x-96">
-          <div>{`Firstname: ${user.firstname}`}</div>
-          <div>{`Lastname: ${user.lastname}`}</div>
+      <div className="relative text-black border border-black w-[1400px] max-h-[450px] h-[400px] min-h-fit px-10 mx-10 mt-10 py-16 rounded-md space-y-4">
+        <div className="flex w-full justify-between">
+          <div className="flex space-x-3 items-center">
+            <div>
+              <label htmlFor="fname">First name: </label>
+              {!showFirstnameInputline ? (
+                user.firstname
+              ) : (
+                <input
+                  id="fname"
+                  name="firstname"
+                  type="text"
+                  value={modifiedFirstname}
+                  onChange={(e) => setModifiedFirstname(e.target.value)}
+                />
+              )}
+            </div>
+            <button
+              onClick={() => setShowFirstnameInputline(!showFirstnameInputline)}
+              className="cursor-pointer hover:border-white"
+            >
+              <FaPen />
+            </button>
+          </div>
+          <div className="flex space-x-3 items-center">
+            <div>
+              <label htmlFor="lname">Last name: </label>
+              {!showLasttnameInputline ? (
+                user.lastname
+              ) : (
+                <input
+                  id="lname"
+                  name="lastname"
+                  type="text"
+                  value={modifiedLastname}
+                  onChange={(e) => setModifiedLastname(e.target.value)}
+                />
+              )}
+            </div>
+            <button
+              onClick={() => setShowLastnameInputline(!showLasttnameInputline)}
+              className="cursor-pointer hover:border-white"
+            >
+              <FaPen />
+            </button>
+          </div>
         </div>
-        <div>Password: ********</div>
-        <div>{`Country: ${user.country}`}</div>
-        <div>{`Interest: ${user.interest}`}</div>
+        <div className="flex space-x-3 items-center">Password: ********</div>
+        <div className="flex space-x-3 items-center">
+          <div>{`Country: ${
+            !modifiedCountry ? user.country : modifiedCountry
+          }`}</div>
+          <div className="cursor-pointer hover:border-white">
+            <Dropdown
+              options={countryOptions}
+              handleFunction={setModifiedCountry}
+            />
+          </div>
+        </div>
+        <div className="flex space-x-3 items-center">
+          <div>{`Interest: ${
+            !modifiedInterest ? user.interest : modifiedInterest
+          }`}</div>
+          <div className="cursor-pointer hover:border-white">
+            <Dropdown
+              options={interestOptions}
+              handleFunction={setModifiedInterest}
+            />
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="bg-red-900 text-white hover:text-gray-300 ml-[200px]"
+        >
+          Logout
+        </button>
+        <button
+          type="button"
+          onClick={handleUpdate}
+          className=" bg-green-950 text-white hover:text-gray-300 ml-[600px]"
+        >
+          Update Details
+        </button>
       </div>
     </div>
   );

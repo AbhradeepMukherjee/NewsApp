@@ -49,7 +49,7 @@ const Loginpage = ({setShowLogin}) => {
       setShowLogin(false);
       navigate('/');
       setToast("toast-success");
-      setToastMessage("Signing up successfull, Welcome!");
+      setToastMessage("Logged in successfully, Welcome!");
       setShowToast(true);
       setTimeout(() => {
           setShowToast(false);
