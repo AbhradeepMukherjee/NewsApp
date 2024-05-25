@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import {BiSolidPencil} from 'react-icons/bi';
 import { Link } from "react-router-dom";
 const Body = ({ category, pageSize }) => {
+  const [user, setUser] = useState("");
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
@@ -21,6 +22,8 @@ const Body = ({ category, pageSize }) => {
     setTotalResults(parsedData.totalResults);
   };
   useEffect(() => {
+    const parsedUser = JSON.parse(localStorage.getItem("userInfo"))
+    setUser(parsedUser);
     upDate();
   }, []);
   const handlePrevious = async () =>{
@@ -53,9 +56,9 @@ const Body = ({ category, pageSize }) => {
 
   return (
     <>
-    <Navbar/>
+    <Navbar user={user}/>
     <div className="bg-slate-50 h-fit min-h-screen flex justify-evenly relative" id="scrollableDiv">
-      <Sidebar />
+      {user?<Sidebar />:<div/>}
       {loading ? <Spinner/>: 
       <div className="mr-10 mb-10">
         <h1 className="text-6xl font-semibold my-3 text-center text-black">Latest News</h1>
@@ -70,9 +73,9 @@ const Body = ({ category, pageSize }) => {
         </div>
       </div>
       }
-    <Link className="fixed right-14 bottom-24 opacity-100 text-black hover:text-black" to="/notes">
+    {user?<Link className="fixed right-14 bottom-24 opacity-100 text-black hover:text-black" to="/notes">
       <button className=" text-black bg-white rounded-full padding-2 h-20 w-20 text-[1.5rem] border border-black hover:border-black"><BiSolidPencil/></button>
-    </Link>
+    </Link>:<div/>}
     </div>
     </>
   );

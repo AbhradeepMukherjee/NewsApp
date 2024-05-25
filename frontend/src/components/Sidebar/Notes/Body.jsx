@@ -2,24 +2,41 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NotesCard from './NotesCard';
 import InputNote from './InputNote';
+import { useRecoilValue } from 'recoil';
+import { tokenAtom } from '../../../store/atom/token';
 const Body = () => {
   const [notes,setNotes] = useState([]);
-  let config = {
-    method: 'get',
-    maxBodyLength: Infinity,
-    url: 'http://localhost:8000/api/v1/notes/bulk',
-    headers: { 
-      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWI5ZjYzYTY2ZDBiMjMxY2E0NjI1NDkiLCJpYXQiOjE3MDY3MTc1OTd9.snTL2YAtHeKd3KenfzRykQm122_EzcZcN-TVp1B__yg` 
+  const token = useRecoilValue(tokenAtom);
+  console.log(token);
+  
+  // let config = {
+  //   method: 'get',
+  //   maxBodyLength: Infinity,
+  //   url: 'http://localhost:8000/api/v1/notes/bulk',
+  //   headers: { 
+  //     'Authorization': `Bearer ${token}` 
+  //   }
+  // };
+
+  const fetchNotes = async (token)=>{
+    try{
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+      };
+      const { data } = await axios.get(
+        "http://localhost:8000/api/v1/notes/bulk",
+        config
+      );
+      console.log(data);
+      setNotes(data);
+    }catch(err){
+      console.log(err);
     }
-  };
+  }
   useEffect(()=>{
-  axios.request(config)
-  .then((response) => {
-    setNotes(response.data.notes);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+  fetchNotes(token);
   },[notes]);
   return (
     <div className='bg-slate-50 h-screen min-h-screen pt-10 p-6 flex'>

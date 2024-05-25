@@ -22,7 +22,7 @@ function App() {
         {showLogin ? (
           <Routes>
             <Route exact path="/" element={<Loginpage setShowLogin={setShowLogin} />}/>
-            <Route exact path="/signup" element={<Signup setShowLogin={setShowLogin} />} />
+            <Route path="/signup" element={<Signup setShowLogin={setShowLogin} />} />
           </Routes>
         ) : (
           <Routes>

@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { tokenAtom } from "../store/atom/token";
+import Toast from "./Toasts/Toast";
+import axios from "axios";
 const Loginpage = ({setShowLogin}) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [toast, setToast] = useState("");
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
-  const setToken = useSetRecoilState(tokenAtom);
+  const [token, setToken] = useRecoilState(tokenAtom);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -46,6 +49,7 @@ const Loginpage = ({setShowLogin}) => {
       );
       localStorage.setItem("userInfo", JSON.stringify(data.user));
       setToken(data.token);
+      console.log(token);
       setShowLogin(false);
       navigate('/');
       setToast("toast-success");
@@ -57,6 +61,7 @@ const Loginpage = ({setShowLogin}) => {
   }catch(err){
       setToast("toast-danger");
       setToastMessage("Error Occured");
+      console.log(err.message);
       setShowToast(true);
       setTimeout(() => {
           setShowToast(false);

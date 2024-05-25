@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 import Toast from "./Toasts/Toast";
 import { useSetRecoilState } from "recoil";
-import {tokenAtom} from "../store/atom/token.js";
+import {tokenAtom} from "../store/atom/token";
 import axios from "axios";
 const Signup = ({setShowLogin}) => {
   const setToken = useSetRecoilState(tokenAtom);

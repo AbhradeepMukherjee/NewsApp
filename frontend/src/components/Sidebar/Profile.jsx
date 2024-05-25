@@ -4,9 +4,10 @@ import { FaPen } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "../Dropdown.jsx";
 import { useRecoilState } from "recoil";
-import { tokenAtom } from "../../store/atom/token.js";
+import { tokenAtom } from "../../store/atom/token";
 const Profile = () => {
   const [token, setToken] = useRecoilState(tokenAtom);
+
   const [user, setUser] = useState({});
   const navigate = useNavigate();
   const [showFirstnameInputline, setShowFirstnameInputline] = useState(false);

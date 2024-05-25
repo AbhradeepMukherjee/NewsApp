@@ -6,10 +6,10 @@ const Notes = () => {
   return (
     <div className="bg-slate-50 min-h-screen h-fit">
       <ul className="flex justify-between bg-slate-200 pt-4 pb-4 pl-8 pr-8 items-center">
-        <li className="">
+        <li>
           <Backbutton />
         </li>
-        <li className="">
+        <li>
           <h1 className="text-black">Notes</h1>
         </li>
         <div className="flex space-x-6">
