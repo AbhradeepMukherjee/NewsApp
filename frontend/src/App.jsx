@@ -1,31 +1,27 @@
 import { useEffect, useState } from "react";
 import { Body } from "./components";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Bookmarks, Notes, Profile } from "./components/Sidebar";
 import Loginpage from "./components/Loginpage";
 import Signup from "./components/Signup";
 function App() {
-  const [showLogin, setShowLogin] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     if(localStorage.getItem("userInfo")) {
-      setShowLogin(false);
+      navigate('/');
       return;
     }
     setTimeout(() => {
-      setShowLogin(!showLogin);
+      navigate('/login');
     }, [10000]);
   }, []);
   return (
     <div className="relative">
-      <Router>
-        {showLogin ? (
+      
           <Routes>
-            <Route exact path="/" element={<Loginpage setShowLogin={setShowLogin} />}/>
-            <Route path="/signup" element={<Signup setShowLogin={setShowLogin} />} />
-          </Routes>
-        ) : (
-          <Routes>
+            <Route exact path="/login" element={<Loginpage />}/>
+            <Route exact path="/signup" element={<Signup />} />
             <Route exact path="/bookmarks" element={<Bookmarks />} />
             <Route exact path="/notes" element={<Notes />} />
             <Route exact path="/profile" element={<Profile />} />
@@ -73,8 +69,7 @@ function App() {
               }
             />
           </Routes>
-        )}
-      </Router>
+
     </div>
   );
 }

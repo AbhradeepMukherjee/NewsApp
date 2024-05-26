@@ -5,7 +5,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { tokenAtom } from "../store/atom/token";
 import Toast from "./Toasts/Toast";
 import axios from "axios";
-const Loginpage = ({setShowLogin}) => {
+const Loginpage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,7 +50,6 @@ const Loginpage = ({setShowLogin}) => {
       localStorage.setItem("userInfo", JSON.stringify(data.user));
       setToken(data.token);
       console.log(token);
-      setShowLogin(false);
       navigate('/');
       setToast("toast-success");
       setToastMessage("Logged in successfully, Welcome!");
@@ -115,7 +114,7 @@ const Loginpage = ({setShowLogin}) => {
           <Link to="/signup" className="text-sm hover:underline hover:underline-offset-2">
             Don't have an account? Sign up
           </Link>
-          <a onClick={()=>setShowLogin(false)}  to="/" className="text-sm hover:underline hover:underline-offset-2 cursor-pointer">
+          <a onClick={()=>navigate('/')}  to="/" className="text-sm hover:underline hover:underline-offset-2 cursor-pointer">
             Skip for now
           </a>
         </div>

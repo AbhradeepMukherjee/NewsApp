@@ -6,7 +6,7 @@ import Toast from "./Toasts/Toast";
 import { useSetRecoilState } from "recoil";
 import {tokenAtom} from "../store/atom/token";
 import axios from "axios";
-const Signup = ({setShowLogin}) => {
+const Signup = () => {
   const setToken = useSetRecoilState(tokenAtom);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -92,7 +92,6 @@ const Signup = ({setShowLogin}) => {
         );
         localStorage.setItem("userInfo", JSON.stringify(data.user));
         setToken(data.token);
-        setShowLogin(false);
         navigate('/');
         setToast("toast-success");
         setToastMessage("Signing up successfull, Welcome!");
@@ -217,7 +216,7 @@ const Signup = ({setShowLogin}) => {
         </form>
         <div className="flex justify-between">
           <Link
-            to="/"
+            to="/login"
             className="text-sm hover:underline hover:underline-offset-2"
           >
             Already have an account

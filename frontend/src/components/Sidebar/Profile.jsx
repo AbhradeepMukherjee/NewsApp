@@ -3,11 +3,11 @@ import Backbutton from "../../assets/icons/Backbutton";
 import { FaPen } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "../Dropdown.jsx";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../store/atom/token";
 const Profile = () => {
-  const [token, setToken] = useRecoilState(tokenAtom);
-
+  const token= useRecoilValue(tokenAtom);
+  console.log(token);
   const [user, setUser] = useState({});
   const navigate = useNavigate();
   const [showFirstnameInputline, setShowFirstnameInputline] = useState(false);
@@ -42,8 +42,7 @@ const Profile = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
-    setToken("");
-    navigate("/");
+    navigate("/login");
   };
 
   const handleUpdate = async () => {

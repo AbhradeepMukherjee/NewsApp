@@ -79,7 +79,7 @@ const Navbar = ({ user }) => {
             </Link>
           </li>
           {!user ? (
-            <button onClick={navigate('/signup')} className="bg-inherit cursor:pointer hover:border-black">
+            <button onClick={navigate('/login')} className="bg-inherit cursor:pointer hover:border-black">
               <LuLogIn />
             </button>
           ) : (

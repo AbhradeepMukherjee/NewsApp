@@ -8,17 +8,8 @@ const Body = () => {
   const [notes,setNotes] = useState([]);
   const token = useRecoilValue(tokenAtom);
   console.log(token);
-  
-  // let config = {
-  //   method: 'get',
-  //   maxBodyLength: Infinity,
-  //   url: 'http://localhost:8000/api/v1/notes/bulk',
-  //   headers: { 
-  //     'Authorization': `Bearer ${token}` 
-  //   }
-  // };
 
-  const fetchNotes = async (token)=>{
+  const fetchNotes = async ()=>{
     try{
       const config = {
         headers: {
@@ -29,15 +20,15 @@ const Body = () => {
         "http://localhost:8000/api/v1/notes/bulk",
         config
       );
-      console.log(data);
-      setNotes(data);
+      console.log(data.notes);
+      setNotes(data.notes);
     }catch(err){
       console.log(err);
     }
   }
   useEffect(()=>{
-  fetchNotes(token);
-  },[notes]);
+  fetchNotes();
+  },[]);
   return (
     <div className='bg-slate-50 h-screen min-h-screen pt-10 p-6 flex'>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-3/4 mr-10'>
