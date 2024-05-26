@@ -5,8 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "../Dropdown.jsx";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../store/atom/token";
+import Toast from "../Toasts/Toast.jsx";
+import axios from "axios";
 const Profile = () => {
   const token= useRecoilValue(tokenAtom);
+  const [toast, setToast] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
   console.log(token);
   const [user, setUser] = useState({});
   const navigate = useNavigate();
@@ -62,6 +67,7 @@ const Profile = () => {
             body[key] = modifiedBody[key];
           }
         });
+        console.log(body);
         const config = {
           headers: {
             'Content-Type': 'application/json', 
@@ -71,6 +77,8 @@ const Profile = () => {
         const { data } = await axios.put(
           "http://localhost:8000/api/v1/user/", body, config
         );
+        console.log(data.user);
+        localStorage.setItem("userInfo", JSON.stringify(data.user));
         setToast("toast-success");
         setToastMessage("Updated successfully!");
         setShowToast(true);
@@ -82,6 +90,7 @@ const Profile = () => {
       } catch (err) {
         setToast("toast-danger");
         setToastMessage("Error Occured");
+        console.log(err.message);
         setShowToast(true);
         setTimeout(() => {
             setShowToast(false);
@@ -214,6 +223,7 @@ const Profile = () => {
           Update Details
         </button>
       </div>
+      {showToast?<Toast setShowToast={setShowToast} message={toastMessage} toast={toast} />:<div/>}
     </div>
   );
 };

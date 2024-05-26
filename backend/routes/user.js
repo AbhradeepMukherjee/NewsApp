@@ -85,7 +85,16 @@ router.put("/", authMiddleware, async (req, res) => {
   if (!putPayload || !success)
     return res.status(411).json({ message: "Invalid Inputs" });
   await User.updateOne({ _id: req.userId }, { $set: { ...putPayload } });
-  return res.status(200).json({ message: "User updated successfully" });
+  const user = await User.findOne({ _id: req.userId });
+  return res.status(200).json({ message: "User updated successfully", user: {
+  "_id": user._id,
+  "firstname": user.firstname,
+  "lastname": user.lastname,
+  "email": user.email,
+  "age": user.age,
+  "country": user.country,
+  "interest": user.interest,
+  }});
 });
 
 module.exports = router;

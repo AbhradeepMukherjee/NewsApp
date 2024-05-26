@@ -3,7 +3,10 @@ import { LuLogIn, LuLogOut } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 const Navbar = ({ user }) => {
   const navigate = useNavigate();
-
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo");
+    navigate("/login");
+  };
   return (
     <div>
       <nav className="bg-slate-200 h-[7rem] flex justify-between pt-4 pb-4 pl-8 pr-8 items-center">
@@ -83,7 +86,7 @@ const Navbar = ({ user }) => {
               <LuLogIn />
             </button>
           ) : (
-            <button className="bg-inherit cursor:pointer hover:border-black">
+            <button onClick={handleLogout} className="bg-inherit cursor:pointer hover:border-black">
               <LuLogOut />
             </button>
           )}
