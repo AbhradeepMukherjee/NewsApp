@@ -18,7 +18,6 @@ function App() {
   }, []);
   return (
     <div className="relative">
-      
           <Routes>
             <Route exact path="/login" element={<Loginpage />}/>
             <Route exact path="/signup" element={<Signup />} />

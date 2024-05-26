@@ -50,13 +50,13 @@ const Loginpage = () => {
       localStorage.setItem("userInfo", JSON.stringify(data.user));
       setToken(data.token);
       console.log(token);
-      navigate('/');
       setToast("toast-success");
       setToastMessage("Logged in successfully, Welcome!");
       setShowToast(true);
       setTimeout(() => {
           setShowToast(false);
       }, 3000);
+      navigate('/');
   }catch(err){
       setToast("toast-danger");
       setToastMessage("Error Occured");

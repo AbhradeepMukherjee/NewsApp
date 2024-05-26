@@ -1,7 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../../store/atom/token";
 
 const InputNote = () => {
+  const token = useRecoilValue(tokenAtom);
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const inputRef = useRef("");
@@ -38,7 +41,7 @@ const InputNote = () => {
           "details": details
         },{
           headers:{
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWI5ZjYzYTY2ZDBiMjMxY2E0NjI1NDkiLCJpYXQiOjE3MDY3MTc1OTd9.snTL2YAtHeKd3KenfzRykQm122_EzcZcN-TVp1B__yg'
+            'Authorization': `Bearer ${token}` 
           }
         })
         setTitle("");

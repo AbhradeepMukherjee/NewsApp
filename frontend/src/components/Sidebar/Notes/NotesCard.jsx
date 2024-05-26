@@ -1,20 +1,67 @@
-import React from 'react';
+import axios from "axios";
+import React, { useState } from "react";
 import { MdDelete, MdEditSquare } from "react-icons/md";
-const NotesCard = ({title, details}) => {
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../../store/atom/token";
+import Toast from "../../Toasts/Toast";
+const NotesCard = ({ title, details, id }) => {
+  const token = useRecoilValue(tokenAtom);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toast, setToast] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const handleNoteDelete = async (id) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const result = await axios.delete(
+        `http://localhost:8000/api/v1/notes/remove/${id}`,
+        config
+      );
+      setToast("toast-success");
+      setToastMessage(result.message);
+      setShowToast(true);
+      setTimeout(() => {
+          setShowToast(false);
+      }, 3000);
+    } catch (err) {
+      setToast("toast-danger");
+      setToastMessage("Error Occured");
+      console.log(err);
+      setShowToast(true);
+      setTimeout(() => {
+          setShowToast(false);
+      }, 3000);
+      return;
+    }
+  };
+  const handleNoteEdit = () => {};
+
   return (
     <div className="max-w-sm h-[12rem] rounded overflow-hidden shadow-2xl relative">
       <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2 text-black border border-b-black border-transparent">{!title? details: title}</div>
-        <p className="text-gray-700 text-base line-clamp-3 text-left">{details}</p>
+        <div className="font-bold text-xl mb-2 text-black border border-b-black border-transparent">
+          {!title ? details : title}
+        </div>
+        <p className="text-gray-700 text-base line-clamp-3 text-left">
+          {details}
+        </p>
       </div>
       <div className="px-6 pb-4 flex justify-around absolute bottom-0 inset-x-0">
-        {/*  onClick={async ()=>{
-          await }}  */}
-          <MdDelete className='text-red-900 cursor-pointer text-2xl'/>
-        <MdEditSquare className='text-yellow-900 cursor-pointer text-2xl'/>
+        <MdDelete
+          onClick={()=>handleNoteDelete(id)}
+          className="text-red-900 cursor-pointer text-2xl"
+        />
+        <MdEditSquare
+          onClick={handleNoteEdit}
+          className="text-yellow-900 cursor-pointer text-2xl"
+        />
       </div>
+      {showToast?<Toast setShowToast={setShowToast} message={toastMessage} toast={toast} />:<div/>}
     </div>
-  )
-}
+  );
+};
 
 export default NotesCard;
